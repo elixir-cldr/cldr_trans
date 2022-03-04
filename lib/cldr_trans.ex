@@ -102,34 +102,58 @@ defmodule Cldr.Trans do
   * `__trans__(:default_locale)` - Returns the name of default locale.
   """
 
+  alias Cldr.Locale
+
   @typedoc """
   A translatable struct that uses `Trans`
   """
   @type translatable() :: struct()
 
   @typedoc """
-  A locale that may be a string or an atom
-  """
-  @type locale() :: String.t() | atom()
-
-  @typedoc """
   When translating or querying either a single
   locale or a list of locales can be provided
   """
-  @type locale_list :: locale | [locale, ...]
+  @type locale_list :: Locale.locale_name() | [Locale.locale_name(), ...]
 
-  defmacro __using__(opts) do
+  @doc false
+  def cldr_backend_provider(config) do
+    module = __MODULE__
+    backend = config.backend
+
+    quote location: :keep, bind_quoted: [module: module, backend: backend] do
+      defmodule Trans do
+        defmacro __using__(opts) do
+          module = unquote(module)
+          backend = unquote(backend)
+          locales = backend.known_locale_names()
+          default_locale = backend.default_locale().cldr_locale_name
+
+          opts =
+            opts
+            |> Keyword.put(:locales, locales)
+            |> Keyword.put(:default_locale, default_locale)
+
+          quote do
+            require Cldr.Trans
+            Cldr.Trans.using(unquote(opts))
+
+            import Cldr.Trans, only: :macros
+          end
+        end
+      end
+    end
+  end
+
+  @doc false
+  defmacro using(opts) do
     quote do
-      Module.put_attribute(__MODULE__, :trans_fields, unquote(translatable_fields(opts)))
-      Module.put_attribute(__MODULE__, :trans_container, unquote(translation_container(opts)))
+      import Cldr.Trans,
+        only: [trans_fields: 1, trans_container: 1, trans_locales: 1, trans_default_locale: 1]
 
-      Module.put_attribute(
-        __MODULE__,
-        :trans_default_locale,
-        unquote(translation_default_locale(opts))
-      )
-
-      import Cldr.Trans, only: :macros
+      Module.put_attribute(__MODULE__, :trans_fields, trans_fields(unquote(opts)))
+      Module.put_attribute(__MODULE__, :trans_container, trans_container(unquote(opts)))
+      Module.put_attribute(__MODULE__, :trans_locales, trans_locales(unquote(opts)))
+      Module.put_attribute(__MODULE__, :trans_default_locale, trans_default_locale(unquote(opts)))
 
       @after_compile {Cldr.Trans, :__validate_translatable_fields__}
       @after_compile {Cldr.Trans, :__validate_translation_container__}
@@ -140,8 +164,20 @@ defmodule Cldr.Trans do
       @spec __trans__(:container) :: atom
       def __trans__(:container), do: @trans_container
 
+      @spec __trans__(:locales) :: [Cldr.Locale.locale_name(), ...]
+      def __trans__(:locales), do: @trans_locales
+
       @spec __trans__(:default_locale) :: atom
       def __trans__(:default_locale), do: @trans_default_locale
+    end
+  end
+
+  defmacro __using__(opts) do
+    quote do
+      require Cldr.Trans
+
+      Cldr.Trans.using(unquote(opts))
+      import Cldr.Trans, only: :macros
     end
   end
 
@@ -150,7 +186,30 @@ defmodule Cldr.Trans do
     [on_replace: :update, primary_key: false, build_field_schema: true]
   end
 
-  defmacro translations(field_name, translation_module, locales, options \\ []) do
+  defmacro translations(field_name, translation_module \\ Translations, locales_or_options \\ []) do
+    if Keyword.keyword?(locales_or_options) do
+      module = __CALLER__.module
+      quote do
+        translations(
+          unquote(field_name),
+          unquote(translation_module),
+          Module.get_attribute(unquote(module), :trans_locales),
+          unquote(locales_or_options)
+        )
+      end
+    else
+      quote do
+        translations(
+          unquote(field_name),
+          unquote(translation_module),
+          unquote(locales_or_options),
+          []
+        )
+      end
+    end
+  end
+
+  defmacro translations(field_name, translation_module, locales, options) do
     options = Keyword.merge(Cldr.Trans.default_trans_options(), options)
     {build_field_schema, options} = Keyword.pop(options, :build_field_schema)
 
@@ -172,7 +231,7 @@ defmodule Cldr.Trans do
   defmacro __build_embedded_schema__(env) do
     translation_module = Module.get_attribute(env.module, :translation_module)
     fields = Module.get_attribute(env.module, :trans_fields)
-    IO.inspect Module.concat(translation_module, :Fields)
+
     quote do
       defmodule Module.concat(unquote(translation_module), :Fields) do
         use Ecto.Schema
@@ -280,7 +339,8 @@ defmodule Cldr.Trans do
     end
   end
 
-  defp translatable_fields(opts) do
+  @doc false
+  def trans_fields(opts) do
     case Keyword.fetch(opts, :translates) do
       {:ok, fields} when is_list(fields) ->
         fields
@@ -292,14 +352,24 @@ defmodule Cldr.Trans do
     end
   end
 
-  defp translation_container(opts) do
+  @doc false
+  def trans_container(opts) do
     case Keyword.fetch(opts, :container) do
       :error -> :translations
       {:ok, container} -> container
     end
   end
 
-  defp translation_default_locale(opts) do
+  @doc false
+  def trans_locales(opts) do
+    case Keyword.fetch(opts, :locales) do
+      :error -> nil
+      {:ok, locales} -> Enum.sort(locales)
+    end
+  end
+
+  @doc false
+  def trans_default_locale(opts) do
     case Keyword.fetch(opts, :default_locale) do
       :error -> nil
       {:ok, default_locale} -> default_locale

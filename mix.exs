@@ -8,7 +8,7 @@ defmodule Cldr.Trans.Mixfile do
       app: :ex_cldr_trans,
       version: @version,
       elixir: "~> 1.7",
-      description: "Embedded translations for Elixir schemas",
+      description: "CLDR-based embedded translations for Elixir schemas",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -46,7 +46,8 @@ defmodule Cldr.Trans.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:ex_cldr, "~> 2.26"},
+      # {:ex_cldr, "~> 2.26"},
+      {:ex_cldr, path: "../cldr"},
       {:jason, "~> 1.1"},
       {:ecto, "~> 3.0"},
 
@@ -74,7 +75,8 @@ defmodule Cldr.Trans.Mixfile do
 
   # Always compile files in "lib". In tests compile also files in
   # "test/support"
-  def elixirc_paths(:test), do: elixirc_paths() ++ ["test/support"]
+  def elixirc_paths(:test), do: elixirc_paths() ++ ["mix", "test/support"]
+  def elixirc_paths(:dev), do: elixirc_paths() ++ ["mix"]
   def elixirc_paths(_), do: elixirc_paths()
   def elixirc_paths, do: ["lib"]
 
