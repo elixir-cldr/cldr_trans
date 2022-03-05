@@ -34,6 +34,7 @@ defmodule Cldr.Trans.Translator do
   """
 
   require Cldr
+  alias Cldr.LanguageTag
 
   @doc """
   Translate a whole struct into the given locale.
@@ -68,9 +69,21 @@ defmodule Cldr.Trans.Translator do
 
       article_de.title #=> "Cómo escribir un corrector ortográfico"
       article_de.body #=> "Un artículo maravilloso de Peter Norvig"
+
   """
   @doc since: "2.3.0"
-  @spec translate(Trans.translatable(), Trans.locale_list()) :: Trans.translatable()
+  @spec translate(Cldr.Trans.translatable()) :: Cldr.Trans.translatable()
+  @spec translate(Cldr.Trans.translatable(), Cldr.Trans.locale_list()) :: Cldr.Trans.translatable()
+
+  def translate(translatable) do
+    locale = Cldr.get_locale()
+    translate(translatable, locale)
+  end
+
+  def translate(translatable, %LanguageTag{} = locale) do
+    fallback_chain = Cldr.Locale.fallback_locale_names(locale)
+    translate(translatable, fallback_chain)
+  end
 
   def translate(%{__struct__: module} = translatable, locale) when Cldr.is_locale_name(locale) or is_list(locale) do
     if Keyword.has_key?(module.__info__(:functions), :__trans__) do
@@ -109,8 +122,21 @@ defmodule Cldr.Trans.Translator do
       # If we request a translation for an invalid field, we will receive an error:
       Trans.Translator.translate(article, :fake_attr, :es)
       ** (RuntimeError) 'Article' module must declare 'fake_attr'  as translatable
+
   """
+  @spec translate(Cldr.Trans.translatable(), atom) :: any
   @spec translate(Cldr.Trans.translatable(), atom, Cldr.Trans.locale_list()) :: any
+
+  def translate(translatable, field) do
+    locale = Cldr.get_locale()
+    translate(translatable, field, locale)
+  end
+
+  def translate(translatable, field, %LanguageTag{} = locale) do
+    fallback_chain = Cldr.Locale.fallback_locale_names(locale)
+    translate(translatable, field, fallback_chain)
+  end
+
   def translate(%{__struct__: module} = translatable, field, locale)
       when (Cldr.is_locale_name(locale) or is_list(locale)) and is_atom(field) do
     default_locale = module.__trans__(:default_locale)

@@ -77,6 +77,8 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
     is located in `test/trans/query_builder_test.ex`).
 
     """
+    alias Cldr.LanguageTag
+    require Cldr.Locale
 
     defmacro translated(module, translatable, locale) do
       static_locales? = static_locales?(locale)
@@ -132,7 +134,12 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
       end
     end
 
-    defp generate_query(schema, module, field, locale, true = _static_locales?) do
+    defp generate_query(schema, module, field, %LanguageTag{} = locale, static_locales?) do
+      locale = locale.cldr_locale_name
+      generate_query(schema, module, field, locale, static_locales?)
+    end
+
+    defp generate_query(schema, module, field, locale, true = _static_locales?) when Cldr.Locale.is_locale_name(locale) do
       if locale == module.__trans__(:default_locale) do
         quote do
           field(unquote(schema), unquote(field))
@@ -151,6 +158,11 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
     end
 
     # Called at runtime - we use a database function
+    defp generate_query(schema, module, field, %LanguageTag{} = locale, static_locales?) do
+      locales = Cldr.Locale.fallback_locale_names(locale)
+      generate_query(schema, module, field, locales, static_locales?)
+    end
+
     defp generate_query(schema, module, field, locales, false = _static_locales?) do
       default_locale = to_string(module.__trans__(:default_locale) || :en)
       translate_field(module, schema, field, default_locale, locales)
@@ -242,11 +254,13 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
       end
     end
 
+    require Cldr
+
     defp static_locales?(locale) when is_atom(locale), do: true
     defp static_locales?(locale) when is_binary(locale), do: true
-
+    defp static_locales?({:%, _, [{:__aliases__, _, [:Cldr, :LanguageTag]}, _]}), do: true
     defp static_locales?(locales) when is_list(locales),
-      do: Enum.all?(locales, &(is_atom(&1) || is_binary(&1)))
+      do: Enum.all?(locales, &Cldr.is_locale_name/1)
 
     defp static_locales?(_locales), do: false
   end

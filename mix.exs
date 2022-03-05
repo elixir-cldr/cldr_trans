@@ -1,13 +1,13 @@
 defmodule Cldr.Trans.Mixfile do
   use Mix.Project
 
-  @version "1.0.0"
+  @version "2.4.0"
 
   def project do
     [
       app: :ex_cldr_trans,
       version: @version,
-      elixir: "~> 1.7",
+      elixir: "~> 1.10",
       description: "CLDR-based embedded translations for Elixir schemas",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
@@ -28,22 +28,10 @@ defmodule Cldr.Trans.Mixfile do
     ]
   end
 
-  # Configuration for the OTP application
-  #
-  # Type "mix help compile.app" for more information
   def application do
     [extra_applications: [:logger]]
   end
 
-  # Dependencies can be Hex packages:
-  #
-  #   {:mydep, "~> 0.3.0"}
-  #
-  # Or git/path repositories:
-  #
-  #   {:mydep, git: "https://github.com/elixir-lang/mydep.git", tag: "0.1.0"}
-  #
-  # Type "mix help deps" for more examples and options
   defp deps do
     [
       # {:ex_cldr, "~> 2.26"},
@@ -56,7 +44,8 @@ defmodule Cldr.Trans.Mixfile do
       {:postgrex, "~> 0.14", optional: true},
 
       # Doc dependencies
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false, optional: true},
     ]
   end
 

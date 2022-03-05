@@ -113,7 +113,7 @@ defmodule Cldr.Trans do
   When translating or querying either a single
   locale or a list of locales can be provided
   """
-  @type locale_list :: Locale.locale_name() | [Locale.locale_name(), ...]
+  @type locale_list :: Locale.locale_reference() | [Locale.locale_name(), ...]
 
   @doc false
   def cldr_backend_provider(config) do
