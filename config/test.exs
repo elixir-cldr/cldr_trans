@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 config :ex_cldr_trans, Cldr.Trans.Repo,
   database: "trans_test",

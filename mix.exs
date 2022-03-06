@@ -1,7 +1,7 @@
 defmodule Cldr.Trans.Mixfile do
   use Mix.Project
 
-  @version "1.0.0-rc.0"
+  @version "2.3.0-rc.0"
 
   def project do
     [
