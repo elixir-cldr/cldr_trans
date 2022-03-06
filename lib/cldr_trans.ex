@@ -186,9 +186,11 @@ defmodule Cldr.Trans do
     [on_replace: :update, primary_key: false, build_field_schema: true]
   end
 
-  defmacro translations(field_name, translation_module \\ Translations, locales_or_options \\ []) do
+  defmacro translations(field_name, translation_module \\ nil, locales_or_options \\ []) do
+    module = __CALLER__.module
+    translation_module = trans_module(translation_module)
+
     if Keyword.keyword?(locales_or_options) do
-      module = __CALLER__.module
       quote do
         translations(
           unquote(field_name),
@@ -218,11 +220,11 @@ defmodule Cldr.Trans do
         @before_compile {Cldr.Trans, :__build_embedded_schema__}
       end
 
-      @translation_module Module.concat(__MODULE__, unquote(translation_module))
+      @translation_module unquote(translation_module)
 
       embeds_one unquote(field_name), unquote(translation_module), unquote(options) do
         for locale_name <- List.wrap(unquote(locales)) do
-          embeds_one locale_name, unquote(translation_module).Fields, on_replace: :update
+          embeds_one locale_name, Module.concat(__MODULE__, Fields), on_replace: :update
         end
       end
     end
@@ -233,7 +235,7 @@ defmodule Cldr.Trans do
     fields = Module.get_attribute(env.module, :trans_fields)
 
     quote do
-      defmodule Module.concat(unquote(translation_module), :Fields) do
+      defmodule Module.concat(__MODULE__, unquote(translation_module).Fields) do
         use Ecto.Schema
         import Ecto.Changeset
 
@@ -374,6 +376,15 @@ defmodule Cldr.Trans do
       :error -> nil
       {:ok, default_locale} -> default_locale
     end
+  end
+
+  @doc false
+  def trans_module(nil) do
+    {:__aliases__, [], [:Translations]}
+  end
+
+  def trans_module(translation_module) do
+    translation_module
   end
 end
 

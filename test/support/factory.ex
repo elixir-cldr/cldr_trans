@@ -1,4 +1,4 @@
-alias Cldr.Trans.{Article, Book, Comment}
+alias Cldr.Trans.{Article, Book, Brochure, Comment}
 alias Cldr.Trans.Repo, as: Repo
 
 defmodule Cldr.Trans.Factory do
@@ -42,6 +42,23 @@ defmodule Cldr.Trans.Factory do
         fr: %Book.Translations.Fields{
           title: unique_string("Book title in French"),
           body: unique_string("Book body in French")
+        }
+      }
+    }
+  end
+
+  def build(:brochure) do
+    %Brochure{
+      title: unique_string("Brochure title in English"),
+      body: unique_string("Brochure body in English"),
+      translations: %Brochure.Translations{
+        ja: %Brochure.Translations.Fields{
+          title: unique_string("Brochure title in Japanese"),
+          body: unique_string("Brochure body in Japanese")
+        },
+        fr: %Brochure.Translations.Fields{
+          title: unique_string("Brochure title in French"),
+          body: unique_string("Brochure body in French")
         }
       }
     }
