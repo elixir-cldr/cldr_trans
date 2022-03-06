@@ -41,6 +41,36 @@ defmodule Cldr.Trans.QueryBuilderTest do
     assert count == 0
   end
 
+  test "should not find any article translated with CLDR locale" do
+    {:ok, locale} = MyApp.Cldr.validate_locale("de")
+
+    count =
+      Repo.one(
+        from(
+          a in Article,
+          where: not is_nil(translated(Article, a, locale)),
+          select: count(a.id)
+        )
+      )
+
+    assert count == 0
+  end
+
+  test "should not find any article translated with current locale" do
+    count =
+      Cldr.with_locale("de", MyApp.Cldr, fn ->
+        Repo.one(
+          from(
+            a in Article,
+            where: not is_nil(translated(Article, a)),
+            select: count(a.id)
+          )
+        )
+      end)
+
+    assert count == 0
+  end
+
   test "should find one article translated to ES falling back from DE" do
     query =
       from(
@@ -175,6 +205,56 @@ defmodule Cldr.Trans.QueryBuilderTest do
 
     assert length(result) == 2
     assert [translated_article.title, untranslated_article.title]
+  end
+
+  test "select the translated (or base) column falling back from unknown DE to default EN with a CLDR locale",
+       %{translated_article: translated_article, untranslated_article: untranslated_article} do
+    {:ok, locale} = Cldr.validate_locale("de", MyApp.Cldr)
+    result =
+      Cldr.with_locale(locale, fn ->
+        Repo.all(
+          from(
+            a in Book,
+            select: translated_as(Book, a.title),
+            where: not is_nil(translated(Book, a.title))
+          )
+        )
+      end)
+
+    assert length(result) == 2
+    assert [translated_article.title, untranslated_article.title]
+  end
+
+  test "select the translated (or base) column into a map",
+       %{translated_article: translated_article, untranslated_article: untranslated_article} do
+    {:ok, locale} = Cldr.validate_locale("de", MyApp.Cldr)
+    result =
+      Cldr.with_locale(locale, fn ->
+        Repo.all(
+          from(
+            a in Book,
+            select: %{title: translated(Book, a.title), body: field(a, :body)},
+            where: not is_nil(translated(Book, a.title))
+          )
+        )
+      end)
+
+    assert length(result) == 2
+    assert [translated_article.title, untranslated_article.title]
+  end
+
+  test "that the translated column is a simple string",
+       %{translated_article: translated_article, untranslated_article: untranslated_article} do
+
+    [first, second] =
+      Repo.all(
+        from(
+          a in Book,
+          select: translated(Book, a.title)
+        )
+      )
+    assert first == translated_article.title
+    assert second == untranslated_article.title
   end
 
   test "select translations for a valid locale with no data should return the default",

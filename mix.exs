@@ -1,7 +1,7 @@
 defmodule Cldr.Trans.Mixfile do
   use Mix.Project
 
-  @version "2.4.0"
+  @version "1.0.0-rc.0"
 
   def project do
     [
@@ -34,7 +34,7 @@ defmodule Cldr.Trans.Mixfile do
 
   defp deps do
     [
-      # {:ex_cldr, "~> 2.26"},
+      # {:ex_cldr, "~> 2.27"},
       {:ex_cldr, path: "../cldr"},
       {:jason, "~> 1.1"},
       {:ecto, "~> 3.0"},
@@ -72,6 +72,7 @@ defmodule Cldr.Trans.Mixfile do
   defp aliases do
     [
       test: [
+        "ecto.drop --quiet",
         "ecto.create --quiet",
         "ecto.migrate --quiet",
         "test"

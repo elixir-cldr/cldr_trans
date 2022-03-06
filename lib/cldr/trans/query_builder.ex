@@ -90,6 +90,15 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
       end
     end
 
+    defmacro translated(module, translatable) do
+      with field <- field(translatable) do
+        module = Macro.expand(module, __CALLER__)
+        validate_field(module, field)
+        locale = quote do: Cldr.get_locale()
+        generate_query(schema(translatable), module, field, locale, false)
+      end
+    end
+
     @doc """
     Generates a SQL fragment for accessing a translated field in an `Ecto.Query`
     `select` clause and returning it aliased to the original field name.
@@ -106,14 +115,21 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
     defmacro translated_as(module, translatable, locale) do
       field = field(translatable)
       translated = quote do: translated(unquote(module), unquote(translatable), unquote(locale))
-      translated_as(translated, field)
+      do_translated_as(translated, field)
     end
 
-    defp translated_as(translated, nil) do
+    defmacro translated_as(module, translatable) do
+      field = field(translatable)
+      locale = quote do: Cldr.get_locale()
+      translated = quote do: translated(unquote(module), unquote(translatable), unquote(locale))
+      do_translated_as(translated, field)
+    end
+
+    defp do_translated_as(translated, nil) do
       translated
     end
 
-    defp translated_as(translated, field) do
+    defp do_translated_as(translated, field) do
       {:fragment, [], ["? AS #{inspect(to_string(field))}", translated]}
     end
 
@@ -132,11 +148,6 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
           unquote(to_string(locale))
         )
       end
-    end
-
-    defp generate_query(schema, module, field, %LanguageTag{} = locale, static_locales?) do
-      locale = locale.cldr_locale_name
-      generate_query(schema, module, field, locale, static_locales?)
     end
 
     defp generate_query(schema, module, field, locale, true = _static_locales?) when Cldr.Locale.is_locale_name(locale) do
@@ -158,11 +169,6 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
     end
 
     # Called at runtime - we use a database function
-    defp generate_query(schema, module, field, %LanguageTag{} = locale, static_locales?) do
-      locales = Cldr.Locale.fallback_locale_names(locale)
-      generate_query(schema, module, field, locales, static_locales?)
-    end
-
     defp generate_query(schema, module, field, locales, false = _static_locales?) do
       default_locale = to_string(module.__trans__(:default_locale) || :en)
       translate_field(module, schema, field, default_locale, locales)
@@ -202,6 +208,12 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
     end
 
     @doc false
+    def list_to_sql_array(%LanguageTag{} = locale) do
+      locale
+      |> Cldr.Locale.fallback_locale_names!()
+      |> Enum.map(&to_string/1)
+    end
+
     def list_to_sql_array(locales) do
       locales
       |> List.wrap()
@@ -258,7 +270,6 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
 
     defp static_locales?(locale) when is_atom(locale), do: true
     defp static_locales?(locale) when is_binary(locale), do: true
-    defp static_locales?({:%, _, [{:__aliases__, _, [:Cldr, :LanguageTag]}, _]}), do: true
     defp static_locales?(locales) when is_list(locales),
       do: Enum.all?(locales, &Cldr.is_locale_name/1)
 
