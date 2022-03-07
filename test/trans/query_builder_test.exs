@@ -342,7 +342,7 @@ defmodule Cldr.Trans.QueryBuilderTest do
   # This implementation returns the base column in all cases which
   # I think is the original authors intent.
 
-  test "should find an article by partial and case sensitive translation",
+  test "should find an article by partial and case insensitive translation",
        %{translated_article: article} do
     first_words =
       article.translations.es.body

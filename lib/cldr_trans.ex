@@ -110,6 +110,11 @@ defmodule Cldr.Trans do
   @type translatable() :: struct()
 
   @typedoc """
+  A struct field as an atom
+  """
+  @type field :: atom()
+
+  @typedoc """
   When translating or querying either a single
   locale or a list of locales can be provided
   """

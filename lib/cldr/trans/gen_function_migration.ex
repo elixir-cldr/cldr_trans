@@ -68,13 +68,13 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
     if Code.ensure_loaded?(Ecto.Migrator) &&
          function_exported?(Ecto.Migrator, :migrations_path, 1) do
       def migrations_path(repo) do
-        Ecto.Migrator.migrations_path(repo)
+        apply(Ecto.Migrator, :migrations_path, [repo])
       end
     end
 
     if Code.ensure_loaded?(Mix.Ecto) && function_exported?(Mix.Ecto, :migrations_path, 1) do
       def migrations_path(repo) do
-        Mix.Ecto.migrations_path(repo)
+        apply(Mix.Ecto, :migrations_path, [repo])
       end
     end
 

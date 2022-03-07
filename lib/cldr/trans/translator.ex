@@ -73,7 +73,11 @@ defmodule Cldr.Trans.Translator do
   """
   @doc since: "2.3.0"
   @spec translate(Cldr.Trans.translatable()) :: Cldr.Trans.translatable()
-  @spec translate(Cldr.Trans.translatable(), Cldr.Trans.locale_list()) :: Cldr.Trans.translatable()
+
+  @spec translate(Cldr.Trans.translatable(), Cldr.Trans.locale_list() | Cldr.Trans.field()) ::
+    Cldr.Trans.translatable() | any()
+
+  @spec translate(Cldr.Trans.translatable(), atom, Cldr.Trans.locale_list()) :: any
 
   def translate(translatable) do
     locale = Cldr.get_locale()
@@ -81,11 +85,12 @@ defmodule Cldr.Trans.Translator do
   end
 
   def translate(translatable, %LanguageTag{} = locale) do
-    fallback_chain = Cldr.Locale.fallback_locale_names(locale)
+    fallback_chain = Cldr.Locale.fallback_locale_names!(locale)
     translate(translatable, fallback_chain)
   end
 
-  def translate(%{__struct__: module} = translatable, locale) when Cldr.is_locale_name(locale) or is_list(locale) do
+  def translate(%{__struct__: module} = translatable, locale)
+      when Cldr.is_locale_name(locale) or is_list(locale) do
     if Keyword.has_key?(module.__info__(:functions), :__trans__) do
       default_locale = module.__trans__(:default_locale)
 
@@ -124,16 +129,13 @@ defmodule Cldr.Trans.Translator do
       ** (RuntimeError) 'Article' module must declare 'fake_attr'  as translatable
 
   """
-  @spec translate(Cldr.Trans.translatable(), atom) :: any
-  @spec translate(Cldr.Trans.translatable(), atom, Cldr.Trans.locale_list()) :: any
-
-  def translate(translatable, field) do
+  def translate(translatable, field) when is_atom(field) do
     locale = Cldr.get_locale()
     translate(translatable, field, locale)
   end
 
   def translate(translatable, field, %LanguageTag{} = locale) do
-    fallback_chain = Cldr.Locale.fallback_locale_names(locale)
+    fallback_chain = Cldr.Locale.fallback_locale_names!(locale)
     translate(translatable, field, fallback_chain)
   end
 

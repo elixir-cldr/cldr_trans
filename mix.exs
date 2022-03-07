@@ -30,7 +30,12 @@ defmodule Cldr.Trans.Mixfile do
           "LICENSE.md",
           "CHANGELOG.md"
         ]
-      ]
+        ],
+
+        dialyzer: [
+          ignore_warnings: ".dialyzer_ignore_warnings",
+          plt_add_apps: ~w(ecto inets jason mix)a
+        ],
     ]
   end
 
@@ -40,8 +45,7 @@ defmodule Cldr.Trans.Mixfile do
 
   defp deps do
     [
-      # {:ex_cldr, "~> 2.27"},
-      {:ex_cldr, path: "../cldr"},
+      {:ex_cldr, "~> 2.27"},
       {:jason, "~> 1.1"},
       {:ecto, "~> 3.0"},
 
