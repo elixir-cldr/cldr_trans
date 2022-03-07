@@ -1,7 +1,7 @@
 defmodule Cldr.Trans.Mixfile do
   use Mix.Project
 
-  @version "2.3.0-rc.0"
+  @version "1.0.0-rc.0"
 
   def project do
     [
@@ -23,7 +23,13 @@ defmodule Cldr.Trans.Mixfile do
       homepage_url: "https://hex.pm/packages/ex_cldr_trans",
       docs: [
         source_ref: "v#{@version}",
-        main: "Cldr Trans"
+        main: "readme",
+        logo: "logo.png",
+        extras: [
+          "README.md",
+          "LICENSE.md",
+          "CHANGELOG.md"
+        ]
       ]
     ]
   end
@@ -44,7 +50,7 @@ defmodule Cldr.Trans.Mixfile do
       {:postgrex, "~> 0.14", optional: true},
 
       # Doc dependencies
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:ex_doc, ">= 0.0.0", only: [:dev, :release], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false, optional: true},
     ]
   end

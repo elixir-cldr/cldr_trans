@@ -6,8 +6,8 @@ defmodule Cldr.Trans.Translator do
   is recommended to access translations using the functions provided by this module** instead. This
   functions present additional behaviours such as:
 
-  * Checking that the given struct uses `Trans`
-  * Automatically inferring the [translation container](Trans.html#module-translation-container)
+  * Checking that the given struct uses `Cldr.Trans`
+  * Automatically inferring the [translation container](Cldr.Trans.html#module-translation-container)
     when needed.
   * Falling back along a locale fallback chain (list of locales in which to look for
     a translation). If not found, then return the default value or raise and exception if a
@@ -65,7 +65,7 @@ defmodule Cldr.Trans.Translator do
   until a translation is found. If none is found, the default value is returned.
 
       # The Deutsch translation does not exist but the Spanish one does
-      article_de = Trans.Translator.translate(article, [:de, :es])
+      article_de = Cldr.Trans.Translator.translate(article, [:de, :es])
 
       article_de.title #=> "Cómo escribir un corrector ortográfico"
       article_de.body #=> "Un artículo maravilloso de Peter Norvig"
@@ -108,19 +108,19 @@ defmodule Cldr.Trans.Translator do
   Assuming the example article in this module:
 
       # We can get the Spanish title:
-      Trans.Translator.translate(article, :title, :es)
+      Cldr.Trans.Translator.translate(article, :title, :es)
       "Cómo escribir un corrector ortográfico"
 
       # If the requested locale is not available, the default value will be returned:
-      Trans.Translator.translate(article, :title, :de)
+      Cldr.Trans.Translator.translate(article, :title, :de)
       "How to Write a Spelling Corrector"
 
       # A fallback chain can also be used:
-      Trans.Translator.translate(article, :title, [:de, :es])
+      Cldr.Trans.Translator.translate(article, :title, [:de, :es])
       "Cómo escribir un corrector ortográfico"
 
       # If we request a translation for an invalid field, we will receive an error:
-      Trans.Translator.translate(article, :fake_attr, :es)
+      Cldr.Trans.Translator.translate(article, :fake_attr, :es)
       ** (RuntimeError) 'Article' module must declare 'fake_attr'  as translatable
 
   """
@@ -163,8 +163,9 @@ defmodule Cldr.Trans.Translator do
 
   Assuming the example article in this module:
 
-      Trans.Translator.translate!(article, :title, :de)
+      Cldr.Trans.Translator.translate!(article, :title, :de)
       ** (RuntimeError) translation doesn't exist for field ':title' in locale 'de'
+
   """
   @doc since: "2.3.0"
   @spec translate!(Cldr.Trans.translatable(), atom, Cldr.Trans.locale_list()) :: any

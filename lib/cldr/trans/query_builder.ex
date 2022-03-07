@@ -6,6 +6,9 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
     This module requires `Ecto.SQL` to be available during the compilation.
     """
 
+    alias Cldr.LanguageTag
+    require Cldr.Locale
+
     @doc """
     Generates a SQL fragment for accessing a translated field in an `Ecto.Query`.
 
@@ -20,29 +23,37 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
     ## Examples
 
     Assuming the Article schema defined in
-    [Structured translations](Trans.html#module-structured-translations):
+    [Structured translations](Cldr.Trans.html#module-structured-translations):
 
         # Return all articles that have a Spanish translation
-        from a in Article, where: translated(Article, a, :es) != "null"
+        from a in Article, where: not is_nil(translated(Article, a, :es)))
         #=> SELECT a0."id", a0."title", a0."body", a0."translations"
         #=> FROM "articles" AS a0
-        #=> WHERE a0."translations"->"es" != 'null'
+        #=> WHERE (NOT (NULLIF((a0."translations"->'es'),'null') IS NULL))
 
         # Query items with a certain translated value
         from a in Article, where: translated(Article, a.title, :fr) == "Elixir"
         #=> SELECT a0."id", a0."title", a0."body", a0."translations"
         #=> FROM "articles" AS a0
-        #=> WHERE ((a0."translations"->"fr"->>"title") = "Elixir")
+        #=> WHERE (COALESCE(a0."translations"->$1->>$2, a0."title") = 'Elixir')
+
+        # Query items with a translated value in the current locale
+        from a in Article, where: translated(Article, a.title) == "Elixir")
+        #=> SELECT a0."id", a0."title", a0."body", a0."translations"
+        #=> FROM "articles" AS a0
+        #=> WHERE (translate_field(a0, $1::varchar, $2::varchar, $3::varchar, $4::varchar[]) = 'Elixir')
+        # Here the parameters are the following when the current locale is "en":
+        #  ["translations", "title", "en", ["en-001", "en"]]
 
         # Query items using a case insensitive comparison
         from a in Article, where: ilike(translated(Article, a.body, :es), "%elixir%")
         #=> SELECT a0."id", a0."title", a0."body", a0."translations"
         #=> FROM "articles" AS a0
-        #=> WHERE ((a0."translations"->"es"->>"body") ILIKE "%elixir%")
+        #=> WHERE (COALESCE(a0."translations"->$1->>$2, a0."body") ILIKE '%elixir%')
 
     ## Structured translations vs free-form translations
 
-    The `Trans.QueryBuilder` works with both
+    The `Cldr.Trans.QueryBuilder` works with both
     [Structured translations](Trans.html#module-structured-translations)
     and with [Free-form translations](Transl.html#module-free-form-translations).
 
@@ -52,23 +63,13 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
 
     When using structured translations, the translations are saved as an embedded schema. This means
     that **the locale keys will be always present even if there is no translation for that locale.**
-    In the database we have a `"null"` JSON value.
+    In the database we have a `NULL` value (`nil` in Elixir).
 
         # If MyApp.Article uses structured translations
-        Repo.all(from a in MyApp.Article, where: translated(MyApp.Article, a, :es) != "null")
+        from a in Cldr.Trans.Article, where: not is_nil(translated(Cldr.Trans.Article, a, :es)))
         #=> SELECT a0."id", a0."title", a0."body", a0."translations"
         #=> FROM "articles" AS a0
-        #=> WHERE (a0."translations"->"es") != 'null'
-
-    When using free-form translations, the translations are stored in a simple map. This means that
-    **the locale keys may be absent if there is no translation for that locale.** In the database we
-    have a `NULL` value.
-
-        # If MyApp.Article uses free-form translations
-        Repo.all(from a in MyApp.Article, where: not is_nil(translated(MyApp.Article, a, :es)))
-        #=> SELECT a0."id", a0."title", a0."body", a0."translations"
-        #=> FROM "articles" AS a0
-        #=> WHERE (NOT ((a0."translations"->"es") IS NULL))
+        #=> WHERE (NOT (NULLIF((a0."translations"->'es'),'null') IS NULL))
 
     ## More complex queries
 
@@ -77,8 +78,6 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
     is located in `test/trans/query_builder_test.ex`).
 
     """
-    alias Cldr.LanguageTag
-    require Cldr.Locale
 
     defmacro translated(module, translatable, locale) do
       static_locales? = static_locales?(locale)
@@ -103,12 +102,14 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
     Generates a SQL fragment for accessing a translated field in an `Ecto.Query`
     `select` clause and returning it aliased to the original field name.
 
-    Therefore, this macro returned a translated field with the name of the
+    Therefore, this macro returns a translated field with the name of the
     table's base column name which means Ecto can load it into a struct
     without further processing or conversion.
 
-    In practise it call the macro `translated/3` and wraps the result in a
+    This macro delegates to the macro `translated/3` and wraps the result in a
     fragment with the column alias.
+
+    See `Cldr.Trans.QueryBuilder.translated/3` for more information.
 
     """
 
