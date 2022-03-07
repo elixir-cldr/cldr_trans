@@ -244,7 +244,10 @@ defmodule Cldr.Trans.QueryBuilderTest do
   end
 
   test "CLDR model with partial translations inserts" do
-    assert %Cldr.Trans.Brochure{} = insert(:brochure)
+    brochure = insert(:brochure)
+    assert %Cldr.Trans.Brochure{} = brochure
+    assert %Cldr.Trans.Brochure.Translations{} = brochure.translations
+    assert %Cldr.Trans.Brochure.Translations.Fields{} = brochure.translations.ja
   end
 
   test "that the translated column is a simple string",
