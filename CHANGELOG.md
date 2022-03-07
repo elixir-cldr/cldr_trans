@@ -6,7 +6,7 @@ This is the changelog for Cldr Trans version 1.0.0-rc.0 released on March 8th, 2
 
 ### Enhancements
 
-Initial release forked from [trans]((https://github.com/crbelaus/trans) with enhancements to integrate with [ex_cldr](https://hex.pm/packages/ex_cldr).
+Initial release forked from [trans](https://github.com/crbelaus/trans) with enhancements to integrate with [ex_cldr](https://hex.pm/packages/ex_cldr).
 
 The primary differences from `trans` are:
 * Infers configured locales from the CLDR backend module
