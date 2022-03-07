@@ -1,6 +1,11 @@
 # Cldr Trans
+![Build Status](http://sweatbox.noexpectations.com.au:8080/buildStatus/icon?job=cldr_trans)
+[![Hex.pm](https://img.shields.io/hexpm/v/ex_cldr_trans.svg)](https://hex.pm/packages/ex_cldr_trans)
+[![Hex.pm](https://img.shields.io/hexpm/dw/ex_cldr_trans.svg?)](https://hex.pm/packages/ex_cldr_trans)
+[![Hex.pm](https://img.shields.io/hexpm/dt/ex_cldr_trans.svg?)](https://hex.pm/packages/ex_cldr_trans)
+[![Hex.pm](https://img.shields.io/hexpm/l/ex_cldr_trans.svg)](https://hex.pm/packages/ex_cldr_trans)
 
-## Acknowledgement
+## Attribution
 
 `ex_cldr_trans` is an `ex_cldr`-integrated fork of the excellent [trans](https://github.com/crbelaus/trans) by [@crbelaus](https://github.com/crbelaus). The enhancements in this library have been been submitted as a [PR](https://github.com/crbelaus/trans/pull/74) to `trans`. If the PR is accepted in the future then this library will revert to depending on it rather than maintaining a fork.  Such a change will not affect the functionality or API in this library.
 
