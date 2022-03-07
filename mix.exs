@@ -63,8 +63,23 @@ defmodule Cldr.Trans.Mixfile do
     [
       licenses: ["Apache-2.0"],
       maintainers: ["Cristian Álvarez Belaustegui", "Kip Cole"],
-      links: %{"GitHub" => "https://github.com/elixir-cldr/cldr_trans"}
+      links: links(),
+      files: [
+        "lib",
+        "mix.exs",
+        "README.md",
+        "LICENSE.md",
+        "CHANGELOG.md"
+      ]
     ]
+  end
+
+  def links do
+    %{
+      "GitHub" => "https://github.com/elixir-cldr/cldr_trans",
+      "Readme" => "https://github.com/elixir-cldr/cldr_trans/blob/v#{@version}/README.md",
+      "Changelog" => "https://github.com/elixir-cldr/cldr_trans/blob/v#{@version}/CHANGELOG.md"
+    }
   end
 
   # Include Ecto and Postgrex applications in tests
