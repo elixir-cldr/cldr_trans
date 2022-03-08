@@ -1,6 +1,7 @@
 import Config
 
 config :ex_cldr_trans, Cldr.Trans.Repo,
+  username: "kip",
   database: "trans_test",
   hostname: "localhost",
   port: 5432,
