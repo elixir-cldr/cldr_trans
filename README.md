@@ -130,19 +130,28 @@ defmodule MyApp.Article do
   schema "articles" do
     field :title, :string
     field :body, :string
+    # use the 'translations' macro to set up a map-field with a set of nested 
+    # structs to handle translation values for each configured locale and each 
+    # translatable field
     translations :translations
   end
 
   def changeset(article, params \\ %{}) do
     article
     |> cast(params, [:title, :body])
+    # use 'cast_embed' to handle values for the 'translations' map-field with 
+    # a nested changeset
     |> cast_embed(:translations, with: &translations_changeset/2)
     |> validate_required([:title, :body])
   end
 
   defp translations_changeset(translations, params) do
+
     translations
     |> cast(params, [])
+    # use 'cast_embed' to handle values for translated fields for each of the
+    # configured languages with a changeset defined by the 'translations' macro 
+    # above
     |> cast_embed(:es)
     |> cast_embed(:fr)
   end
