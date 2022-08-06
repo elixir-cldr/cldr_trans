@@ -132,6 +132,20 @@ defmodule MyApp.Article do
     field :body, :string
     translations :translations
   end
+
+  def changeset(article, params \\ %{}) do
+    article
+    |> cast(params, [:title, :body])
+    |> cast_embed(:translations, with: &translations_changeset/2)
+    |> validate_required([:title, :body])
+  end
+
+  defp translations_changeset(translations, params) do
+    translations
+    |> cast(params, [])
+    |> cast_embed(:es)
+    |> cast_embed(:fr)
+  end
 end
 ```
 
