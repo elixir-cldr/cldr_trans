@@ -130,13 +130,71 @@ defmodule MyApp.Article do
   schema "articles" do
     field :title, :string
     field :body, :string
+    # use the 'translations' macro to set up a map-field with a set of nested 
+    # structs to handle translation values for each configured locale and each 
+    # translatable field
     translations :translations
+  end
+
+  def changeset(article, params \\ %{}) do
+    article
+    |> cast(params, [:title, :body])
+    # use 'cast_embed' to handle values for the 'translations' map-field with 
+    # a nested changeset
+    |> cast_embed(:translations, with: &translations_changeset/2)
+    |> validate_required([:title, :body])
+  end
+
+  defp translations_changeset(translations, params) do
+
+    translations
+    |> cast(params, [])
+    # use 'cast_embed' to handle values for translated fields for each of the
+    # configured languages with a changeset defined by the 'translations' macro 
+    # above
+    |> cast_embed(:es)
+    |> cast_embed(:fr)
   end
 end
 ```
 
 After doing this we can leverage the [Cldr.Trans.Translator](https://hexdocs.pm/ex_cldr_trans/Cldr.Trans.Translator.html) and [Cldr.Trans.QueryBuilder](https://hexdocs.pm/ex_cldr_trans/Cldr.Trans.QueryBuilder.html) modules to fetch and query translations from the database.
 
-The translation storage can be managed using normal `Ecto.Changeset` functions just like any other field.
+The translation storage can be managed using normal `Ecto.Changeset` functions just like any other field. Leveraging changesets and the `inputs_for` helper, your HTML form for `Article` might look like:
 
+```
+<.form let={f} for={@changeset} phx-change="validate" phx-submit="save">
+  <%= label f, :title %>
+  <%= text_input f, :title %>
+  <%= error_tag f, :title %>
+
+  <!-- translations for 'title' field -->
+  <%= inputs_for f, :translations, fn form_translations -> %>
+  <%= for locale <- [:es, :fr] do %>
+    <%= inputs_for form_translations, locale, fn form_locale -> %>
+    <div>
+      <span><%= "#{locale}" %></span>
+      <%= text_input form_locale, :title, placeholder: Map.get(@changeset.data, :title) %>
+    </div>
+    <%= error_tag form_locale, :title %>
+  <% end %>
+
+  <%= label f, :body %>
+  <%= text_input f, :body %>
+  <%= error_tag f, :body %>
+
+  <!-- translations for 'body' field -->
+  <%= inputs_for f, :translations, fn form_translations -> %>
+  <%= for locale <- [:es, :fr] do %>
+    <%= inputs_for form_translations, locale, fn form_locale -> %>
+    <div>
+      <span><%= "#{locale}" %></span>
+      <%= text_input form_locale, :body, placeholder: Map.get(@changeset.data, :body) %>
+    </div>
+    <%= error_tag form_locale, :body %>
+  <% end %>
+
+  <%= submit "Save" %>
+</.form>
+```
 
