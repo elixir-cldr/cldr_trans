@@ -33,13 +33,13 @@ defmodule Cldr.Trans do
           field :body, :string
 
           embeds_one :translations, Translations, on_replace: :update, primary_key: false do
-            embeds_one :es, MyApp.Article.Translation
-            embeds_one :fr, MyApp.Article.Translation
+            embeds_one :es, MyApp.Article.Translations.Fields
+            embeds_one :fr, MyApp.Article.Translations.Fields
           end
         end
       end
 
-      defmodule MyApp.Article.Translation do
+      defmodule MyApp.Article.Translations.Fields do
         use Ecto.Schema
 
         @primary_key false
