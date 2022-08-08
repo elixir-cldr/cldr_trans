@@ -54,7 +54,7 @@ defmodule Cldr.Trans do
 
   * High flexibility when making validations and transformation using the embedded schema's own
     changeset.
-  * Easy to integrate with HTML forms leveraging the capabilities of `inputs_for`
+  * Easy to integrate with HTML forms leveraging the capabilities of [Phoenix.HTML.Form.inputs_for/2](https://hexdocs.pm/phoenix_html/Phoenix.HTML.Form.html#module-nested-inputs)
   * Easy navegability using the dot notation.
 
   ## Free-form translations
