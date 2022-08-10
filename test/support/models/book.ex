@@ -15,7 +15,7 @@ defmodule Cldr.Trans.Book do
   """
 
   use Ecto.Schema
-  use Cldr.Trans, translates: [:title, :body], default_locale: :en
+  use MyApp.Cldr.Trans, translates: [:title, :body]
 
   schema "articles" do
     field :title, :string

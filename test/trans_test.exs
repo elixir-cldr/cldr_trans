@@ -24,14 +24,17 @@ defmodule Cldr.TransTest do
     assert Article.__trans__(:container) == :translations
   end
 
-  test "the default locale" do
+  test "the default locale can be set from the Cldr backend" do
+    assert Article.__trans__(:default_locale) == :en
+  end
+  
+  test "the Cldr backend's default locale can be overridden per model" do 
     defmodule Book do
-      use Trans, translates: [:title, :body], default_locale: :en
+      use Trans, translates: [:title, :body], default_locale: :fr
       defstruct title: "", body: "", translations: %{}
     end
 
-    assert Book.__trans__(:default_locale) == :en
-    assert Article.__trans__(:default_locale) == nil
+    assert Book.__trans__(:default_locale) == :fr
   end
 
   test "returns the custom translation container name if specified" do
@@ -88,7 +91,7 @@ defmodule Cldr.TransTest do
         unique: true}} =
       Cldr.Trans.Brochure.__schema__(:type, :translations)
 
-     assert [:ar, :de, :doi, :en, :"en-001", :"en-AU", :fr, :"fr-CA", :ja, :nb, :no, :pl, :th] =
+     assert [:ar, :de, :doi, :en, :"en-AU", :fr, :"fr-CA", :ja, :nb, :no, :pl, :th] =
        Cldr.Trans.Brochure.Translations.__schema__(:fields)
      assert [:title, :body] = Cldr.Trans.Brochure.Translations.Fields.__schema__(:fields)
   end

@@ -2,7 +2,7 @@ defmodule Cldr.Trans.Comment do
   @moduledoc false
 
   use Ecto.Schema
-  use Cldr.Trans, translates: [:comment], container: :transcriptions
+  use MyApp.Cldr.Trans, translates: [:comment], container: :transcriptions
 
   import Ecto.Changeset
 
