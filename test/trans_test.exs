@@ -91,7 +91,7 @@ defmodule Cldr.TransTest do
         unique: true}} =
       Cldr.Trans.Brochure.__schema__(:type, :translations)
 
-     assert [:ar, :de, :doi, :en, :"en-AU", :fr, :"fr-CA", :ja, :nb, :no, :pl, :th] =
+     assert [:ar, :de, :doi, :"en-AU", :fr, :"fr-CA", :ja, :nb, :no, :pl, :th] =
        Cldr.Trans.Brochure.Translations.__schema__(:fields)
      assert [:title, :body] = Cldr.Trans.Brochure.Translations.Fields.__schema__(:fields)
   end
