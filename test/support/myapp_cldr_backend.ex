@@ -4,5 +4,4 @@ defmodule MyApp.Cldr do
     locales: ["en", "de", "ja", "en-AU", "th", "ar", "pl", "doi", "fr-CA", "nb", "no"],
     generate_docs: true,
     providers: [Cldr.Trans]
-
 end
