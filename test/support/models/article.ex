@@ -31,7 +31,7 @@ defmodule Cldr.Trans.Article do
   """
 
   use Ecto.Schema
-  use Cldr.Trans, translates: [:title, :body]
+  use MyApp.Cldr.Trans, translates: [:title, :body]
 
   import Ecto.Changeset
 

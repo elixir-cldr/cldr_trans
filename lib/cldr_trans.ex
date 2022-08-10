@@ -18,6 +18,7 @@ defmodule Cldr.Trans do
   * `:container` (optional) - name of the field that contains the embedded translations.
     Defaults to`:translations`.
   * `:default_locale` (optional) - declares the locale of the base untranslated column.
+    Defaults to the `default_locale` configured for the Cldr backend.
 
   ## Structured translations
 
@@ -26,7 +27,7 @@ defmodule Cldr.Trans do
 
       defmodule MyApp.Article do
         use Ecto.Schema
-        use Trans, translates: [:title, :body], default_locale: :en
+        use MyApp.Cldr.Trans, translates: [:title, :body]
 
         schema "articles" do
           field :title, :string
@@ -66,7 +67,7 @@ defmodule Cldr.Trans do
 
       defmodule MyApp.Article do
         use Ecto.Schema
-        use Trans, translates: [:title, :body], default_locale: :en
+        use MyApp.Cldr.Trans, translates: [:title, :body]
 
         schema "articles" do
           field :title, :string
@@ -217,6 +218,7 @@ defmodule Cldr.Trans do
   end
 
   defmacro translations(field_name, translation_module, locales, options) do
+    module = __CALLER__.module
     options = Keyword.merge(Cldr.Trans.default_trans_options(), options)
     {build_field_schema, options} = Keyword.pop(options, :build_field_schema)
 
@@ -229,7 +231,9 @@ defmodule Cldr.Trans do
 
       embeds_one unquote(field_name), unquote(translation_module), unquote(options) do
         for locale_name <- List.wrap(unquote(locales)) do
-          embeds_one locale_name, Module.concat(__MODULE__, Fields), on_replace: :update
+          if locale_name != Module.get_attribute(unquote(module), :trans_default_locale) do
+            embeds_one locale_name, Module.concat(__MODULE__, Fields), on_replace: :update
+          end
         end
       end
     end
