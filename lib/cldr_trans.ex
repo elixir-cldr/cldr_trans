@@ -18,6 +18,7 @@ defmodule Cldr.Trans do
   * `:container` (optional) - name of the field that contains the embedded translations.
     Defaults to`:translations`.
   * `:default_locale` (optional) - declares the locale of the base untranslated column.
+    Defaults to the `default_locale` configured for the Cldr backend.
 
   ## Structured translations
 
@@ -26,7 +27,7 @@ defmodule Cldr.Trans do
 
       defmodule MyApp.Article do
         use Ecto.Schema
-        use Trans, translates: [:title, :body], default_locale: :en
+        use MyApp.Cldr.Trans, translates: [:title, :body]
 
         schema "articles" do
           field :title, :string
@@ -66,7 +67,7 @@ defmodule Cldr.Trans do
 
       defmodule MyApp.Article do
         use Ecto.Schema
-        use Trans, translates: [:title, :body], default_locale: :en
+        use MyApp.Cldr.Trans, translates: [:title, :body]
 
         schema "articles" do
           field :title, :string
