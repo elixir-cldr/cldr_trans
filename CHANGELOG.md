@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr Trans v1.1.0
+
+This is the changelog for Cldr Trans version 1.1.0 released on August 10th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr_trans/tags)
+
+### Enhancements
+
+* By default uses the default locale on the Cldr backend as the assumed locale of the non-translated field. Don't generate translations struct for the default locale either. This enhancement kindly contributed by @petrus-jvrensburg,
+
 ## Cldr Trans v1.0.0
 
 This is the changelog for Cldr Trans version 1.0.0 released on March 27th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr_trans/tags)
