@@ -1,7 +1,7 @@
 defmodule Cldr.Trans.Mixfile do
   use Mix.Project
 
-  @version "1.0.0-rc.0"
+  @version "1.0.0"
 
   def project do
     [
@@ -30,12 +30,12 @@ defmodule Cldr.Trans.Mixfile do
           "LICENSE.md",
           "CHANGELOG.md"
         ]
-        ],
+      ],
 
-        dialyzer: [
-          ignore_warnings: ".dialyzer_ignore_warnings",
-          plt_add_apps: ~w(ecto inets jason mix)a
-        ],
+      dialyzer: [
+        ignore_warnings: ".dialyzer_ignore_warnings",
+        plt_add_apps: ~w(ecto inets jason mix)a
+      ],
     ]
   end
 

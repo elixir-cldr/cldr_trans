@@ -230,10 +230,9 @@ defmodule Cldr.Trans do
       @translation_module unquote(translation_module)
 
       embeds_one unquote(field_name), unquote(translation_module), unquote(options) do
-        for locale_name <- List.wrap(unquote(locales)) do
-          if locale_name != Module.get_attribute(unquote(module), :trans_default_locale) do
-            embeds_one locale_name, Module.concat(__MODULE__, Fields), on_replace: :update
-          end
+        for locale_name <- List.wrap(unquote(locales)),
+            locale_name != Module.get_attribute(unquote(module), :trans_default_locale) do
+          embeds_one locale_name, Module.concat(__MODULE__, Fields), on_replace: :update
         end
       end
     end

@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr Trans v1.0.0
+
+This is the changelog for Cldr Trans version 1.0.0 released on March 27th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr_trans/tags)
+
+### Enhancements
+
+* Publish official 1.0 release
+
 ## Cldr Trans v1.0.0-rc.0
 
 This is the changelog for Cldr Trans version 1.0.0-rc.0 released on March 8th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr_trans/tags)
