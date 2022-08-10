@@ -33,13 +33,13 @@ defmodule Cldr.Trans do
           field :body, :string
 
           embeds_one :translations, Translations, on_replace: :update, primary_key: false do
-            embeds_one :es, MyApp.Article.Translation
-            embeds_one :fr, MyApp.Article.Translation
+            embeds_one :es, MyApp.Article.Translations.Fields
+            embeds_one :fr, MyApp.Article.Translations.Fields
           end
         end
       end
 
-      defmodule MyApp.Article.Translation do
+      defmodule MyApp.Article.Translations.Fields do
         use Ecto.Schema
 
         @primary_key false
@@ -54,7 +54,7 @@ defmodule Cldr.Trans do
 
   * High flexibility when making validations and transformation using the embedded schema's own
     changeset.
-  * Easy to integrate with HTML forms leveraging the capabilities of `inputs_for`
+  * Easy to integrate with HTML forms leveraging the capabilities of [Phoenix.HTML.Form.inputs_for/2](https://hexdocs.pm/phoenix_html/Phoenix.HTML.Form.html#module-nested-inputs)
   * Easy navegability using the dot notation.
 
   ## Free-form translations

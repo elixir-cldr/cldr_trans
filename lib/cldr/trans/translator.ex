@@ -2,7 +2,7 @@ defmodule Cldr.Trans.Translator do
   @moduledoc """
   Provides easy access to struct translations.
 
-  Although translations are stored in regular fields of an struct and can be accessed directly, **it
+  Although translations are stored in regular fields of a struct and can be accessed directly, **it
   is recommended to access translations using the functions provided by this module** instead. This
   functions present additional behaviours such as:
 
@@ -15,17 +15,17 @@ defmodule Cldr.Trans.Translator do
   * Translating entire structs.
 
   All examples in this module assume the following article, based on the schema defined in
-  [Structured translations](Trans.html#module-structured-translations)
+  [Structured translations](Cldr.Trans.html#module-structured-translations)
 
       article = %MyApp.Article{
         title: "How to Write a Spelling Corrector",
         body: "A wonderful article by Peter Norvig",
         translations: %MyApp.Article.Translations{
-          es: %MyApp.Article.Translation{
+          es: %MyApp.Article.Translations.Fields{
             title: "Cómo escribir un corrector ortográfico",
             body: "Un artículo maravilloso de Peter Norvig"
           },
-          fr: %MyApp.Article.Translation{
+          fr: %MyApp.Article.Translations.Fields{
              title: "Comment écrire un correcteur orthographique",
              body: "Un merveilleux article de Peter Norvig"
            }

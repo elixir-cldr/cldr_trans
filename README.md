@@ -160,7 +160,7 @@ end
 
 After doing this we can leverage the [Cldr.Trans.Translator](https://hexdocs.pm/ex_cldr_trans/Cldr.Trans.Translator.html) and [Cldr.Trans.QueryBuilder](https://hexdocs.pm/ex_cldr_trans/Cldr.Trans.QueryBuilder.html) modules to fetch and query translations from the database.
 
-The translation storage can be managed using normal `Ecto.Changeset` functions just like any other field. Leveraging changesets and the `inputs_for` helper, your HTML form for `Article` might look like:
+The translation storage can be managed using normal `Ecto.Changeset` functions just like any other field. Leveraging changesets and the [Phoenix.HTML.Form.inputs_for/2](https://hexdocs.pm/phoenix_html/Phoenix.HTML.Form.html#module-nested-inputs) helper, your HTML form for `Article` might look like:
 
 ```
 <.form let={f} for={@changeset} phx-change="validate" phx-submit="save">

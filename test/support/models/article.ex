@@ -25,7 +25,7 @@ defmodule Cldr.Trans.Article do
 
   Embedded schemas are much more explicit about how everything works and provide higher flexibility
   in validations and transformations by using their own changesets. Using embedded schemas also
-  makes it easier to build forms thanks to the `Phoenix.HTML.Form.inputs_for/2` helper.
+  makes it easier to build forms thanks to the [Phoenix.HTML.Form.inputs_for/2](https://hexdocs.pm/phoenix_html/Phoenix.HTML.Form.html#module-nested-inputs) helper.
 
   Due to this reasons, **embedded schemas are the preferred way of using Trans.**
   """
