@@ -55,7 +55,7 @@ defmodule Cldr.Trans.Mixfile do
 
       # Doc dependencies
       {:ex_doc, ">= 0.0.0", only: [:dev, :release], runtime: false},
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false, optional: true},
+      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false, optional: true},
     ]
   end
 
