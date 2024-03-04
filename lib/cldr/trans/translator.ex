@@ -47,7 +47,7 @@ defmodule Cldr.Trans.Translator do
   Assuming the example article in this module, we can translate the entire struct into Spanish:
 
       # Translate the entire article into Spanish
-      article_es = Trans.Translator.translate(article, :es)
+      article_es = Cldr.Trans.Translator.translate(article, :es)
 
       article_es.title #=> "Cómo escribir un corrector ortográfico"
       article_es.body #=> "Un artículo maravilloso de Peter Norvig"
@@ -55,7 +55,7 @@ defmodule Cldr.Trans.Translator do
   Just like `translate/3`, falls back to the default locale if the translation does not exist:
 
       # The Deutsch translation does not exist so the default values are returned
-      article_de = Trans.Translator.translate(article, :de)
+      article_de = Cldr.Trans.Translator.translate(article, :de)
 
       article_de.title #=> "How to Write a Spelling Corrector"
       article_de.body #=> "A wonderful article by Peter Norvig"
