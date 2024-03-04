@@ -148,28 +148,51 @@ defmodule MyApp.Article do
     # translatable field
     translations :translations
   end
+```
 
+### Casting translations
+
+`ex_cldr_trans` will generate a simple default changeset for the translations
+field. It looks like this:
+
+```elixir
+def changeset(fields, params) do
+  fields
+  |> cast(params, list_of_translatable_fields)
+  |> validate_required(list_of_translatable_fields)
+end
+```
+
+Which means that it is only checking that translations are non-empty for each translatable
+field in each locale configured in `MyApp.Cldr`.  That may not be flexible enough for all
+requirements. Therefore a custom changeset may need to be defined for the translations field.
+Here's one example:
+
+```elixir
   def changeset(article, params \\ %{}) do
     article
     |> cast(params, [:title, :body])
-    # use 'cast_embed' to handle values for the 'translations' map-field with
-    # a nested changeset
+    # use 'cast_embed' to cast values for the 'translations' field.
     |> cast_embed(:translations, with: &translations_changeset/2)
     |> validate_required([:title, :body])
   end
 
+  # This is the changeset that will be invoked by the
+  # cast_embed/3 call above.
   defp translations_changeset(translations, params) do
-
     translations
     |> cast(params, [])
     # use 'cast_embed' to handle values for translated fields for each of the
     # configured languages with a changeset defined by the 'translations' macro
-    # above
+    # above. Assumes that `:en` (the default), `:es` and `:fr` are configured in
+    # `MyApp.Cldr`.
     |> cast_embed(:es)
     |> cast_embed(:fr)
   end
 end
 ```
+
+### Query Building and Forms
 
 After doing this we can leverage the [Cldr.Trans.Translator](https://hexdocs.pm/ex_cldr_trans/Cldr.Trans.Translator.html) and [Cldr.Trans.QueryBuilder](https://hexdocs.pm/ex_cldr_trans/Cldr.Trans.QueryBuilder.html) modules to fetch and query translations from the database.
 
