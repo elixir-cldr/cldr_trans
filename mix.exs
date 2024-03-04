@@ -34,7 +34,7 @@ defmodule Cldr.Trans.Mixfile do
 
       dialyzer: [
         ignore_warnings: ".dialyzer_ignore_warnings",
-        plt_add_apps: ~w(ecto inets jason mix)a
+        plt_add_apps: ~w(ecto ecto_sql inets jason mix)a
       ],
     ]
   end
