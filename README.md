@@ -5,6 +5,19 @@
 [![Hex.pm](https://img.shields.io/hexpm/dt/ex_cldr_trans.svg?)](https://hex.pm/packages/ex_cldr_trans)
 [![Hex.pm](https://img.shields.io/hexpm/l/ex_cldr_trans.svg)](https://hex.pm/packages/ex_cldr_trans)
 
+## Installation
+
+The package can be installed by adding `ex_cldr_trans` to your list of dependencies in `mix.exs`:
+
+```elixir
+def deps do
+  [
+    {:ex_cldr_trans, "~> 1.1"}
+  ]
+end
+```
+Documentation can be found at [https://hexdocs.pm/ex_cldr_trans](https://hexdocs.pm/ex_cldr_trans).
+
 ## Attribution
 
 `ex_cldr_trans` is an `ex_cldr`-integrated fork of the excellent [trans](https://github.com/crbelaus/trans) by [@crbelaus](https://github.com/crbelaus). The enhancements in this library have been been submitted as a [PR](https://github.com/crbelaus/trans/pull/74) to `trans`. If the PR is accepted in the future then this library will revert to depending on it rather than maintaining a fork.  Such a change will not affect the functionality or API in this library.
