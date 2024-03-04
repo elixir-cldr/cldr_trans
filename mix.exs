@@ -97,15 +97,7 @@ defmodule Cldr.Trans.Mixfile do
   defp aliases do
     [
       test: [
-        "ecto.create --quiet",
-        "ecto.
-        migrate --quiet",
-        "test"
-      ],
-
-      test_local: [
-        "ecto.drop --quiet",
-        "ecto.create --quiet",
+        # "ecto.create --quiet",
         "ecto.migrate --quiet",
         "test"
       ]
