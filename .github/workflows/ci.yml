@@ -19,9 +19,9 @@ permissions:
 
 jobs:
   test:
-    Set up a Postgres DB service. By default, Phoenix applications
-    use Postgres. This creates a database for running tests.
-    Additional services can be defined here if required.
+    # Set up a Postgres DB service. By default, Phoenix applications
+    # use Postgres. This creates a database for running tests.
+    # Additional services can be defined here if required.
     services:
       db:
         image: postgres:12
