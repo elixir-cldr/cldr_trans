@@ -1,5 +1,5 @@
 # Cldr Trans
-![Build Status](http://sweatbox.noexpectations.com.au:8080/buildStatus/icon?job=cldr_trans)
+![Build status](https://github.com/elixir-cldr/cldr_trans/actions/workflows/ci.yml/badge.svg)
 [![Hex.pm](https://img.shields.io/hexpm/v/ex_cldr_trans.svg)](https://hex.pm/packages/ex_cldr_trans)
 [![Hex.pm](https://img.shields.io/hexpm/dw/ex_cldr_trans.svg?)](https://hex.pm/packages/ex_cldr_trans)
 [![Hex.pm](https://img.shields.io/hexpm/dt/ex_cldr_trans.svg?)](https://hex.pm/packages/ex_cldr_trans)
@@ -12,7 +12,7 @@ The package can be installed by adding `ex_cldr_trans` to your list of dependenc
 ```elixir
 def deps do
   [
-    {:ex_cldr_trans, "~> 1.1"}
+    {:ex_cldr_trans, "~> 1.0"}
   ]
 end
 ```
@@ -143,8 +143,8 @@ defmodule MyApp.Article do
   schema "articles" do
     field :title, :string
     field :body, :string
-    # use the 'translations' macro to set up a map-field with a set of nested 
-    # structs to handle translation values for each configured locale and each 
+    # use the 'translations' macro to set up a map-field with a set of nested
+    # structs to handle translation values for each configured locale and each
     # translatable field
     translations :translations
   end
@@ -152,7 +152,7 @@ defmodule MyApp.Article do
   def changeset(article, params \\ %{}) do
     article
     |> cast(params, [:title, :body])
-    # use 'cast_embed' to handle values for the 'translations' map-field with 
+    # use 'cast_embed' to handle values for the 'translations' map-field with
     # a nested changeset
     |> cast_embed(:translations, with: &translations_changeset/2)
     |> validate_required([:title, :body])
@@ -163,7 +163,7 @@ defmodule MyApp.Article do
     translations
     |> cast(params, [])
     # use 'cast_embed' to handle values for translated fields for each of the
-    # configured languages with a changeset defined by the 'translations' macro 
+    # configured languages with a changeset defined by the 'translations' macro
     # above
     |> cast_embed(:es)
     |> cast_embed(:fr)
