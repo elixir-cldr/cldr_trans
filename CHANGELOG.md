@@ -1,5 +1,17 @@
 # Changelog
 
+## Cldr Trans v1.1.1
+
+This is the changelog for Cldr Trans version 1.1.0 released on March 5th, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr_trans/tags)
+
+### Bug Fixes
+
+* Adds `@moduledoc false` to the translations and field generated modules to reduce noise. Thanks to @ArthurClemens for the issue. Closes #9.
+
+### Enhancements
+
+* Improve the clarity of the documentation in the README and the `Cldr.Trans` modules.
+
 ## Cldr Trans v1.1.0
 
 This is the changelog for Cldr Trans version 1.1.0 released on August 10th, 2022.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr_trans/tags)
