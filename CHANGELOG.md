@@ -6,7 +6,7 @@ This is the changelog for Cldr Trans version 1.1.2 released on March 6th, 2024. 
 
 ### Bug Fixes
 
-* Adds `@moduledoc false` to the translations generated modules to reduce noise.
+* Mnaully generates the translations embedded_scheam and adds `@moduledoc false` to it to reduce noise. This concludes the work to ensure generated modules don't have docs in them (since they are empty and have no developer value).
 
 ## Cldr Trans v1.1.1
 
