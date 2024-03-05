@@ -103,6 +103,8 @@ defmodule Cldr.Trans do
 
     quote location: :keep, bind_quoted: [module: module, backend: backend] do
       defmodule Trans do
+        @moduledoc false
+
         defmacro __using__(opts) do
           module = unquote(module)
           backend = unquote(backend)
@@ -219,6 +221,8 @@ defmodule Cldr.Trans do
 
     quote do
       defmodule Module.concat(__MODULE__, unquote(translation_module).Fields) do
+        @moduledoc false
+
         use Ecto.Schema
         import Ecto.Changeset
 
