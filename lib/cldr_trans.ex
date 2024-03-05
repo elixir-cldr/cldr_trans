@@ -81,18 +81,21 @@ defmodule Cldr.Trans do
   alias Cldr.Locale
 
   @typedoc """
-  A translatable struct that uses `Trans`
+  A translatable struct that uses `Trans`.
+
   """
   @type translatable() :: struct()
 
   @typedoc """
-  A struct field as an atom
+  A struct field as an atom.
+
   """
   @type field :: atom()
 
   @typedoc """
   When translating or querying either a single
-  locale or a list of locales can be provided
+  locale or a list of locales can be provided.
+
   """
   @type locale_list :: Locale.locale_reference() | [Locale.locale_name(), ...]
 
@@ -166,7 +169,7 @@ defmodule Cldr.Trans do
 
   @doc false
   def default_trans_options do
-    [on_replace: :update, primary_key: false, build_field_schema: true]
+    [build_field_schema: true]
   end
 
   defmacro translations(field_name, translation_module \\ nil, locales_or_options \\ []) do
@@ -195,32 +198,44 @@ defmodule Cldr.Trans do
   end
 
   defmacro translations(field_name, translation_module, locales, options) do
-    module = __CALLER__.module
+    caller = __CALLER__.module
     options = Keyword.merge(Cldr.Trans.default_trans_options(), options)
-    {build_field_schema, options} = Keyword.pop(options, :build_field_schema)
+    {build_field_schema, _options} = Keyword.pop(options, :build_field_schema)
 
     quote do
       if unquote(translation_module) && unquote(build_field_schema) do
         @before_compile {Cldr.Trans, :__build_embedded_schema__}
       end
 
-      @translation_module unquote(translation_module)
+      @translation_module  Module.concat(unquote(caller), unquote(translation_module))
+      @locales unquote(locales)
 
-      embeds_one unquote(field_name), unquote(translation_module), unquote(options) do
-        for locale_name <- List.wrap(unquote(locales)),
-            locale_name != Module.get_attribute(unquote(module), :trans_default_locale) do
-          embeds_one locale_name, Module.concat(__MODULE__, Fields), on_replace: :update
-        end
-      end
+      embeds_one unquote(field_name), @translation_module, on_replace: :update
     end
   end
 
   defmacro __build_embedded_schema__(env) do
     translation_module = Module.get_attribute(env.module, :translation_module)
     fields = Module.get_attribute(env.module, :trans_fields)
+    locales = Module.get_attribute(env.module, :locales)
+    default_locale = Module.get_attribute(env.module, :trans_default_locale)
 
     quote do
-      defmodule Module.concat(__MODULE__, unquote(translation_module).Fields) do
+      defmodule unquote(translation_module) do
+        @moduledoc false
+
+        use Ecto.Schema
+
+        @primary_key false
+        embedded_schema do
+          for locale_name <- List.wrap(unquote(locales)),
+              locale_name != unquote(default_locale) do
+            embeds_one locale_name, Module.concat(__MODULE__, Fields), on_replace: :update
+          end
+        end
+      end
+
+      defmodule Module.concat(unquote(translation_module), Fields) do
         @moduledoc false
 
         use Ecto.Schema

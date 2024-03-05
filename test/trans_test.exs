@@ -27,8 +27,8 @@ defmodule Cldr.TransTest do
   test "the default locale can be set from the Cldr backend" do
     assert Article.__trans__(:default_locale) == :en
   end
-  
-  test "the Cldr backend's default locale can be overridden per model" do 
+
+  test "the Cldr backend's default locale can be overridden per model" do
     defmodule Book do
       use Trans, translates: [:title, :body], default_locale: :fr
       defstruct title: "", body: "", translations: %{}
@@ -58,6 +58,12 @@ defmodule Cldr.TransTest do
   test "translations/3 macro" do
     assert :translations in Trans.Magazine.__schema__(:fields)
 
+    assert [:es, :it, :de] =
+      Trans.Magazine.Translations.__schema__(:fields)
+
+    assert [:title, :body] =
+      Trans.Magazine.Translations.Fields.__schema__(:fields)
+
     assert {
       :parameterized, Ecto.Embedded,
       %Ecto.Embedded{
@@ -70,13 +76,16 @@ defmodule Cldr.TransTest do
         related: Trans.Magazine.Translations,
         unique: true}} =
       Trans.Magazine.__schema__(:type, :translations)
-
-     assert [:es, :it, :de] = Trans.Magazine.Translations.__schema__(:fields)
-     assert [:title, :body] = Trans.Magazine.Translations.Fields.__schema__(:fields)
   end
 
   test "MyApp.Cldr.Trans.translations/3 macro" do
     assert :translations in Cldr.Trans.Brochure.__schema__(:fields)
+
+    assert [:ar, :de, :doi, :"en-AU", :fr, :"fr-CA", :ja, :nb, :no, :pl, :th] =
+      Cldr.Trans.Brochure.Translations.__schema__(:fields)
+
+    assert [:title, :body] =
+      Cldr.Trans.Brochure.Translations.Fields.__schema__(:fields)
 
     assert {
       :parameterized, Ecto.Embedded,
@@ -90,9 +99,13 @@ defmodule Cldr.TransTest do
         related: Cldr.Trans.Brochure.Translations,
         unique: true}} =
       Cldr.Trans.Brochure.__schema__(:type, :translations)
+  end
 
-     assert [:ar, :de, :doi, :"en-AU", :fr, :"fr-CA", :ja, :nb, :no, :pl, :th] =
-       Cldr.Trans.Brochure.Translations.__schema__(:fields)
-     assert [:title, :body] = Cldr.Trans.Brochure.Translations.Fields.__schema__(:fields)
+  test "Confirm translations embedded schemas have no docs" do
+    assert {:docs_v1, 1, :elixir, "text/markdown", :hidden, %{}, _} =
+      Code.fetch_docs(Cldr.Trans.Brochure.Translations)
+
+    assert {:docs_v1, 1, :elixir, "text/markdown", :hidden, %{}, _} =
+      Code.fetch_docs(Cldr.Trans.Brochure.Translations.Fields)
   end
 end
