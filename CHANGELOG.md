@@ -2,7 +2,7 @@
 
 ## Cldr Trans v1.1.1
 
-This is the changelog for Cldr Trans version 1.1.0 released on March 5th, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr_trans/tags)
+This is the changelog for Cldr Trans version 1.1.1 released on March 5th, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr_trans/tags)
 
 ### Bug Fixes
 
