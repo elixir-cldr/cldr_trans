@@ -208,7 +208,7 @@ defmodule Cldr.Trans.Translator do
     with {:ok, all_translations} <- Map.fetch(struct, module.__trans__(:container)),
          {:ok, translations_for_locale} <- get_translations_for_locale(all_translations, locale),
          {:ok, translated_field} <- get_translated_field(translations_for_locale, field) do
-      translated_field
+      translated_field || Map.fetch!(struct, field)
     end
   end
 
