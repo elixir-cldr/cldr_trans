@@ -24,3 +24,5 @@ cldr_trans-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+.DS_Store
