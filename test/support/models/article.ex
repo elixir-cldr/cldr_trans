@@ -1,3 +1,5 @@
+require Cldr.Trans
+
 defmodule Cldr.Trans.Article.Translations.Fields do
   use Ecto.Schema
   import Ecto.Changeset

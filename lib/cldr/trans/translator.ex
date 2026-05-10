@@ -218,6 +218,7 @@ defmodule Cldr.Trans.Translator do
     Enum.reduce(fields, struct, fn field, struct ->
       case translate_field(struct, locale, field, default_locale) do
         :error -> struct
+        nil -> struct
         translation -> Map.put(struct, field, translation)
       end
     end)

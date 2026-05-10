@@ -1,5 +1,13 @@
 # Changelog
 
+## Cldr Trans v1.1.3
+
+This is the changelog for Cldr Trans version 1.1.3 released on May 11th, 2026.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr_trans/tags)
+
+### Bug Fixes
+
+* `Cldr.Trans.Translator.translate/2` (whole-struct translation) now falls back to the default value when a configured locale exists in the translations container but its `Fields` embed is `nil` or otherwise empty, matching the documented and per-field behaviour. Thanks to @tozz for the report. Closes #10.
+
 ## Cldr Trans v1.1.2
 
 This is the changelog for Cldr Trans version 1.1.2 released on March 6th, 2024.  For older changelogs please consult the release tag on [GitHub](https://github.com/elixir-cldr/cldr_trans/tags)

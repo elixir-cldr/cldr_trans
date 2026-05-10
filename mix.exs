@@ -1,7 +1,7 @@
 defmodule Cldr.Trans.Mixfile do
   use Mix.Project
 
-  @version "1.1.2"
+  @version "1.1.3"
 
   def project do
     [
@@ -47,11 +47,10 @@ defmodule Cldr.Trans.Mixfile do
     [
       {:ex_cldr, "~> 2.27"},
       {:jason, "~> 1.1"},
-      {:ecto, "~> 3.0"},
 
       # Optional dependencies
-      {:ecto_sql, "~> 3.0", optional: true},
-      {:postgrex, "~> 0.14", optional: true},
+      {:ecto_sql, "~> 3.0"},
+      {:postgrex, "~> 0.19 or ~> 1.0"},
 
       # Doc dependencies
       {:ex_doc, ">= 0.0.0", only: [:dev, :release], runtime: false},

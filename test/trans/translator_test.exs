@@ -54,6 +54,22 @@ defmodule Cldr.Trans.TranslatorTest do
         assert de_comment.comment == original_comment.comment
       end
     end
+
+    test "translate/2 falls back to the default when a configured locale's translation is empty" do
+      # :es is configured at the schema level, but its embedded Fields struct is
+      # absent (nil). Translating the whole struct should fall back to the
+      # default values rather than overwriting them with nil. Closes #10.
+      article = %Trans.Article{
+        title: "default title",
+        body: "default body",
+        translations: %Trans.Article.Translations{}
+      }
+
+      es_article = translate(article, :es)
+
+      assert es_article.title == "default title"
+      assert es_article.body == "default body"
+    end
   end
 
   describe "with free map translations" do

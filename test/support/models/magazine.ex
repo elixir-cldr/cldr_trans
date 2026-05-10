@@ -1,3 +1,5 @@
+require Cldr.Trans
+
 defmodule Cldr.Trans.Magazine do
   use Ecto.Schema
   use MyApp.Cldr.Trans, translates: [:title, :body]

@@ -56,7 +56,7 @@ defmodule Cldr.Trans.Factory do
           title: unique_string("Brochure title in Japanese"),
           body: unique_string("Brochure body in Japanese")
         },
-        fr: %Brochure.Translations.Fields{
+        "fr-CA": %Brochure.Translations.Fields{
           title: unique_string("Brochure title in French"),
           body: unique_string("Brochure body in French")
         }
