@@ -38,10 +38,23 @@ jobs:
     name: Test on OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
     strategy:
       # Specify the OTP and Elixir versions to use when building
-      # and running the workflow steps.
+      # and running the workflow steps. Matches the matrix used by
+      # elixir-cldr/cldr to keep the supported version set consistent
+      # across the cldr_* libraries.
       matrix:
-        otp: ['25.3.2']       # Define the OTP version [required]
-        elixir: ['1.14.4']    # Define the elixir version [required]
+        include:
+          # minimum required versions
+          - otp: "27.2.4"
+            elixir: "1.18.4-otp-27"
+          - otp: "28.3.1"
+            elixir: "1.18.4-otp-28"
+          - otp: "27.2.4"
+            elixir: "1.19.5-otp-27"
+          - otp: "28.3.1"
+            elixir: "1.19.5-otp-28"
+          - otp: "28.3.1"
+            elixir: "1.20.0-rc.1-otp-28"
+            lint: true
     steps:
     # Step: Setup Elixir + Erlang image as the base.
     - name: Set up Elixir
@@ -52,7 +65,7 @@ jobs:
 
     # Step: Check out the code.
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v5
 
     # Step: Define how to cache deps. Restores existing cache if present.
     - name: Cache deps

@@ -7,7 +7,7 @@ defmodule Cldr.Trans.Mixfile do
     [
       app: :ex_cldr_trans,
       version: @version,
-      elixir: "~> 1.10",
+      elixir: "~> 1.17",
       description: "CLDR-based embedded translations for Ecto schemas",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
