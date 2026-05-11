@@ -304,31 +304,23 @@ defmodule Cldr.Trans do
 
   @doc false
   def __validate_translatable_fields__(%{module: module}, _bytecode) do
-    struct_fields =
-      module.__struct__()
-      |> Map.keys()
-      |> MapSet.new()
+    struct_fields = Map.keys(module.__struct__())
+    translatable_fields = module.__trans__(:fields)
+    invalid_fields = translatable_fields -- struct_fields
 
-    translatable_fields =
-      :fields
-      |> module.__trans__
-      |> MapSet.new()
-
-    invalid_fields = MapSet.difference(translatable_fields, struct_fields)
-
-    case MapSet.size(invalid_fields) do
-      0 ->
+    case invalid_fields do
+      [] ->
         nil
 
-      1 ->
+      [_] ->
         raise ArgumentError,
           message:
-            "#{module} declares '#{MapSet.to_list(invalid_fields)}' as translatable but it is not defined in the module's struct"
+            "#{module} declares '#{invalid_fields}' as translatable but it is not defined in the module's struct"
 
       _ ->
         raise ArgumentError,
           message:
-            "#{module} declares '#{MapSet.to_list(invalid_fields)}' as translatable but it they not defined in the module's struct"
+            "#{module} declares '#{invalid_fields}' as translatable but they are not defined in the module's struct"
     end
   end
 

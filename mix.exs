@@ -47,10 +47,11 @@ defmodule Cldr.Trans.Mixfile do
     [
       {:ex_cldr, "~> 2.27"},
       {:jason, "~> 1.1"},
+      {:ecto, "~> 3.0"},
 
       # Optional dependencies
-      {:ecto_sql, "~> 3.0"},
-      {:postgrex, "~> 0.19 or ~> 1.0"},
+      {:ecto_sql, "~> 3.0", optional: true},
+      {:postgrex, "~> 0.19 or ~> 1.0", optional: true},
 
       # Doc dependencies
       {:ex_doc, ">= 0.0.0", only: [:dev, :release], runtime: false},
