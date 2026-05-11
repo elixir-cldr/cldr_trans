@@ -75,7 +75,7 @@ defmodule Cldr.Trans.Translator do
   @spec translate(Cldr.Trans.translatable()) :: Cldr.Trans.translatable()
 
   @spec translate(Cldr.Trans.translatable(), Cldr.Trans.locale_list() | Cldr.Trans.field()) ::
-    Cldr.Trans.translatable() | any()
+          Cldr.Trans.translatable() | any()
 
   @spec translate(Cldr.Trans.translatable(), atom, Cldr.Trans.locale_list()) :: any
 

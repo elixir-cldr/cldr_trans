@@ -207,10 +207,10 @@ defmodule Cldr.Trans do
         @before_compile {Cldr.Trans, :__build_embedded_schema__}
       end
 
-      @translation_module  Module.concat(unquote(caller), unquote(translation_module))
+      @translation_module Module.concat(unquote(caller), unquote(translation_module))
       @locales unquote(locales)
 
-      embeds_one unquote(field_name), @translation_module, on_replace: :update
+      embeds_one(unquote(field_name), @translation_module, on_replace: :update)
     end
   end
 
@@ -230,7 +230,7 @@ defmodule Cldr.Trans do
         embedded_schema do
           for locale_name <- List.wrap(unquote(locales)),
               locale_name != unquote(default_locale) do
-            embeds_one locale_name, Module.concat(__MODULE__, Fields), on_replace: :update
+            embeds_one(locale_name, Module.concat(__MODULE__, Fields), on_replace: :update)
           end
         end
       end
@@ -244,7 +244,7 @@ defmodule Cldr.Trans do
         @primary_key false
         embedded_schema do
           for a_field <- unquote(fields) do
-            field a_field, :string
+            field(a_field, :string)
           end
         end
 
@@ -331,7 +331,7 @@ defmodule Cldr.Trans do
     unless Enum.member?(Map.keys(module.__struct__()), container) do
       raise ArgumentError,
         message:
-          "The field #{container} used as the translation container is not defined in #{inspect module} struct"
+          "The field #{container} used as the translation container is not defined in #{inspect(module)} struct"
     end
   end
 
@@ -381,4 +381,3 @@ defmodule Cldr.Trans do
     translation_module
   end
 end
-

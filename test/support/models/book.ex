@@ -3,8 +3,8 @@ defmodule Cldr.Trans.Book.Translations.Fields do
 
   @primary_key false
   embedded_schema do
-    field :title, :string
-    field :body, :string
+    field(:title, :string)
+    field(:body, :string)
   end
 end
 
@@ -18,15 +18,13 @@ defmodule Cldr.Trans.Book do
   use MyApp.Cldr.Trans, translates: [:title, :body]
 
   schema "articles" do
-    field :title, :string
-    field :body, :string
+    field(:title, :string)
+    field(:body, :string)
 
     embeds_one :translations, Translations, on_replace: :update, primary_key: false do
-      embeds_one :es, __MODULE__.Fields, on_replace: :update
-      embeds_one :fr, __MODULE__.Fields, on_replace: :update
-      embeds_one :it, __MODULE__.Fields, on_replace: :update
+      embeds_one(:es, __MODULE__.Fields, on_replace: :update)
+      embeds_one(:fr, __MODULE__.Fields, on_replace: :update)
+      embeds_one(:it, __MODULE__.Fields, on_replace: :update)
     end
   end
 end
-
-

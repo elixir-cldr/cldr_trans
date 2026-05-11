@@ -59,55 +59,59 @@ defmodule Cldr.TransTest do
     assert :translations in Trans.Magazine.__schema__(:fields)
 
     assert [:es, :it, :de] =
-      Trans.Magazine.Translations.__schema__(:fields)
+             Trans.Magazine.Translations.__schema__(:fields)
 
     assert [:title, :body] =
-      Trans.Magazine.Translations.Fields.__schema__(:fields)
+             Trans.Magazine.Translations.Fields.__schema__(:fields)
 
     assert {
-      :parameterized,
-      {Ecto.Embedded,
-       %Ecto.Embedded{
-         cardinality: :one,
-         field: :translations,
-         on_cast: nil,
-         on_replace: :update,
-         ordered: true,
-         owner: Trans.Magazine,
-         related: Trans.Magazine.Translations,
-         unique: true}}} =
-      Trans.Magazine.__schema__(:type, :translations)
+             :parameterized,
+             {Ecto.Embedded,
+              %Ecto.Embedded{
+                cardinality: :one,
+                field: :translations,
+                on_cast: nil,
+                on_replace: :update,
+                ordered: true,
+                owner: Trans.Magazine,
+                related: Trans.Magazine.Translations,
+                unique: true
+              }}
+           } =
+             Trans.Magazine.__schema__(:type, :translations)
   end
 
   test "MyApp.Cldr.Trans.translations/3 macro" do
     assert :translations in Cldr.Trans.Brochure.__schema__(:fields)
 
     assert [:ar, :de, :doi, :"en-AU", :"fr-CA", :ja, :nb, :no, :pl, :th] =
-      Cldr.Trans.Brochure.Translations.__schema__(:fields)
+             Cldr.Trans.Brochure.Translations.__schema__(:fields)
 
     assert [:title, :body] =
-      Cldr.Trans.Brochure.Translations.Fields.__schema__(:fields)
+             Cldr.Trans.Brochure.Translations.Fields.__schema__(:fields)
 
     assert {
-      :parameterized,
-      {Ecto.Embedded,
-       %Ecto.Embedded{
-         cardinality: :one,
-         field: :translations,
-         on_cast: nil,
-         on_replace: :update,
-         ordered: true,
-         owner: Cldr.Trans.Brochure,
-         related: Cldr.Trans.Brochure.Translations,
-         unique: true}}} =
-      Cldr.Trans.Brochure.__schema__(:type, :translations)
+             :parameterized,
+             {Ecto.Embedded,
+              %Ecto.Embedded{
+                cardinality: :one,
+                field: :translations,
+                on_cast: nil,
+                on_replace: :update,
+                ordered: true,
+                owner: Cldr.Trans.Brochure,
+                related: Cldr.Trans.Brochure.Translations,
+                unique: true
+              }}
+           } =
+             Cldr.Trans.Brochure.__schema__(:type, :translations)
   end
 
   test "Confirm translations embedded schemas have no docs" do
     assert {:docs_v1, _, :elixir, "text/markdown", :hidden, %{}, _} =
-      Code.fetch_docs(Cldr.Trans.Brochure.Translations)
+             Code.fetch_docs(Cldr.Trans.Brochure.Translations)
 
     assert {:docs_v1, _, :elixir, "text/markdown", :hidden, %{}, _} =
-      Code.fetch_docs(Cldr.Trans.Brochure.Translations.Fields)
+             Code.fetch_docs(Cldr.Trans.Brochure.Translations.Fields)
   end
 end

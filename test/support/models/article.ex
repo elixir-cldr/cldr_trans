@@ -6,8 +6,8 @@ defmodule Cldr.Trans.Article.Translations.Fields do
 
   @primary_key false
   embedded_schema do
-    field :title, :string
-    field :body, :string
+    field(:title, :string)
+    field(:body, :string)
   end
 
   def changeset(fields, params) do
@@ -38,13 +38,13 @@ defmodule Cldr.Trans.Article do
   import Ecto.Changeset
 
   schema "articles" do
-    field :title, :string
-    field :body, :string
-    has_many :comments, Cldr.Trans.Comment
+    field(:title, :string)
+    field(:body, :string)
+    has_many(:comments, Cldr.Trans.Comment)
 
     embeds_one :translations, Translations, on_replace: :update, primary_key: false do
-      embeds_one :es, __MODULE__.Fields, on_replace: :update
-      embeds_one :fr, __MODULE__.Fields, on_replace: :update
+      embeds_one(:es, __MODULE__.Fields, on_replace: :update)
+      embeds_one(:fr, __MODULE__.Fields, on_replace: :update)
     end
   end
 
@@ -62,4 +62,3 @@ defmodule Cldr.Trans.Article do
     |> cast_embed(:fr)
   end
 end
-

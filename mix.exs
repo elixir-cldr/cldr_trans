@@ -31,11 +31,10 @@ defmodule Cldr.Trans.Mixfile do
           "CHANGELOG.md"
         ]
       ],
-
       dialyzer: [
         ignore_warnings: ".dialyzer_ignore_warnings",
         plt_add_apps: ~w(ecto ecto_sql inets jason mix)a
-      ],
+      ]
     ]
   end
 
@@ -55,7 +54,7 @@ defmodule Cldr.Trans.Mixfile do
 
       # Doc dependencies
       {:ex_doc, ">= 0.0.0", only: [:dev, :release], runtime: false},
-      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false, optional: true},
+      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false, optional: true}
     ]
   end
 

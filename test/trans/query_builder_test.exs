@@ -210,6 +210,7 @@ defmodule Cldr.Trans.QueryBuilderTest do
   test "select the translated (or base) column falling back from unknown DE to default EN with a CLDR locale",
        %{translated_article: translated_article, untranslated_article: untranslated_article} do
     {:ok, locale} = Cldr.validate_locale("de", MyApp.Cldr)
+
     result =
       Cldr.with_locale(locale, fn ->
         Repo.all(
@@ -228,6 +229,7 @@ defmodule Cldr.Trans.QueryBuilderTest do
   test "select the translated (or base) column into a map",
        %{translated_article: translated_article, untranslated_article: untranslated_article} do
     {:ok, locale} = Cldr.validate_locale("de", MyApp.Cldr)
+
     result =
       Cldr.with_locale(locale, fn ->
         Repo.all(
@@ -252,7 +254,6 @@ defmodule Cldr.Trans.QueryBuilderTest do
 
   test "that the translated column is a simple string",
        %{translated_article: translated_article, untranslated_article: untranslated_article} do
-
     [first, second] =
       Repo.all(
         from(
@@ -260,6 +261,7 @@ defmodule Cldr.Trans.QueryBuilderTest do
           select: translated(Book, a.title)
         )
       )
+
     assert first == translated_article.title
     assert second == untranslated_article.title
   end

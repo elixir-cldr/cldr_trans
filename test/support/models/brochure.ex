@@ -5,8 +5,8 @@ defmodule Cldr.Trans.Brochure do
   use MyApp.Cldr.Trans, translates: [:title, :body]
 
   schema "articles" do
-    field :title, :string
-    field :body, :string
-    translations :translations
+    field(:title, :string)
+    field(:body, :string)
+    translations(:translations)
   end
 end

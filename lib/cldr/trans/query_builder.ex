@@ -134,7 +134,8 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
       {:fragment, [], ["? AS #{inspect(to_string(field))}", translated]}
     end
 
-    defp generate_query(schema, module, field, locales, true = static_locales?) when is_list(locales) do
+    defp generate_query(schema, module, field, locales, true = static_locales?)
+         when is_list(locales) do
       for locale <- locales do
         generate_query(schema, module, field, locale, static_locales?)
       end
@@ -151,7 +152,8 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
       end
     end
 
-    defp generate_query(schema, module, field, locale, true = _static_locales?) when Cldr.Locale.is_locale_name(locale) do
+    defp generate_query(schema, module, field, locale, true = _static_locales?)
+         when Cldr.Locale.is_locale_name(locale) do
       if locale == module.__trans__(:default_locale) do
         quote do
           field(unquote(schema), unquote(field))
@@ -271,6 +273,7 @@ if Code.ensure_loaded?(Ecto.Adapters.SQL) do
 
     defp static_locales?(locale) when is_atom(locale), do: true
     defp static_locales?(locale) when is_binary(locale), do: true
+
     defp static_locales?(locales) when is_list(locales),
       do: Enum.all?(locales, &Cldr.is_locale_name/1)
 
