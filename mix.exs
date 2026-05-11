@@ -25,6 +25,7 @@ defmodule Cldr.Trans.Mixfile do
         source_ref: "v#{@version}",
         main: "readme",
         logo: "logo.png",
+        formatters: ["html", "markdown"],
         extras: [
           "README.md",
           "LICENSE.md",
