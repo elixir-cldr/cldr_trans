@@ -26,3 +26,6 @@ cldr_trans-*.tar
 /tmp/
 
 .DS_Store
+
+# Claude session context
+CLAUDE.local.md
